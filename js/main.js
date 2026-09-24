@@ -1,19 +1,79 @@
 // Número no formato internacional, só dígitos (ex.: '5531999999999'). Vazio = botões levam ao rodapé.
 const WHATSAPP_NUMBER = '';
 
+// bio: textos oficiais da pasta manifesto (um item por parágrafo). styles: só o que a biografia cita.
 const ARTISTS = [
-  { name: 'Ana Alves', role: 'Artista' },
+  {
+    name: 'Ana Alves',
+    role: 'Artista',
+    styles: ['Tattoo', 'Pintura'],
+    bio: [
+      'Aninha encontrou na arte uma forma de conquistar liberdade e expressar quem é. Seu trabalho nasce tanto das coisas bonitas da vida quanto das experiências difíceis que atravessam sua história, transformando sentimentos em imagem.',
+      'Respeito, liberdade e autenticidade são a base da artista que busca construir. Entre tattoo e pintura, Aninha quer ampliar sua linguagem, ganhar cada vez mais autonomia e criar trabalhos que carreguem verdade, força e identidade.'
+    ]
+  },
   { name: 'Lari', role: 'Artista' },
-  { name: 'Savoi', role: 'Artista' },
+  {
+    name: 'Savoi',
+    role: 'Artista',
+    bio: [
+      'Savoi encontrou na tattoo uma forma de transformar a relação que sempre teve com a arte em caminho de vida. É através dela que explora novas formas de expressão, cria conexões e encontra pessoas que se identificam com o que ele faz.',
+      'Seu trabalho nasce da curiosidade e da vontade constante de aprender. Savoi busca ampliar suas referências, viver novas experiências e construir uma arte cada vez mais conectada com quem ele é e com a forma como enxerga o mundo.'
+    ]
+  },
   { name: 'Thales', role: 'Body Piercer', page: 'thales.html' },
-  { name: 'Victor', role: 'Artista' },
-  { name: 'Fune', role: 'Artista' },
-  { name: 'Neville', role: 'Artista' },
+  {
+    name: 'Victor',
+    role: 'Artista',
+    bio: [
+      'Victor é um artista movido pelo inconformismo e pela vontade de construir algo maior do que aquilo que esperavam dele. Essa inquietação também aparece na forma como enxerga a tatuagem: como expressão, identidade e escolha.',
+      'Respeito, honestidade e confiança são a base do seu trabalho. Mais do que entregar uma imagem na pele, Victor busca criar algo verdadeiro, que carregue intenção e uma parte de quem ele é como artista.'
+    ]
+  },
+  {
+    name: 'Fune',
+    role: 'Artista',
+    bio: [
+      'Fune é um artista que encontrou na arte uma forma de existir com mais liberdade. Influenciado pelo desenho, pela música e pela cultura hip hop, constrói um trabalho que nasce da necessidade de se expressar sem seguir caminhos prontos.',
+      'Sua busca é por uma linguagem cada vez mais autoral, capaz de provocar sensação, estranhamento ou identificação. Para ele, cada trabalho também carrega um pouco de quem ele é e da escolha de viver fora da curva.'
+    ]
+  },
+  {
+    name: 'Neville',
+    role: 'Artista',
+    bio: [
+      'Neville encontrou na tattoo uma continuação de uma paixão que começou cedo, desenhando Dragon Ball e se conectando tanto com a estética quanto com as histórias e valores presentes nesse universo.',
+      'Honestidade, sinceridade e respeito guiam sua forma de trabalhar. Como artista, busca construir uma identidade própria e criar tattoos que reforcem uma ideia importante para ele: cada pessoa é única e capaz de transformar a própria realidade.'
+    ]
+  },
   { name: 'Yoki', role: 'Artista' },
-  { name: 'Lincoln', role: 'Artista' },
-  { name: 'Pedro Jr', role: 'Artista' },
+  {
+    name: 'Lincoln',
+    role: 'Artista',
+    bio: [
+      'Lincoln é um artista que encontrou na tattoo um caminho para transformar experiência, responsabilidade e vivência em expressão. Depois de passar por diferentes fases e tentativas profissionais, foi na arte que ele encontrou algo que realmente fazia sentido continuar construindo.',
+      'Seu trabalho parte muito da confiança. Para Lincoln, tatuar também é assumir a responsabilidade de marcar momentos e histórias que pertencem a outras pessoas, transformando ideias em algo que passa a fazer parte delas.'
+    ]
+  },
+  {
+    name: 'Pedro Jr',
+    role: 'Artista',
+    styles: ['Geek', 'Mangá & Anime'],
+    bio: [
+      'Pedro é um artista que encontrou na tattoo uma continuação natural de algo que sempre fez parte da sua vida: desenhar, criar e viver o universo geek.',
+      'Mangás, animes e outras referências dessa cultura aparecem no seu trabalho como formas de unir identidade, sentimento e narrativa. Mais do que tatuar, Pedro busca crescer dentro da arte e construir um trabalho que também possa inspirar outros artistas no caminho.'
+    ]
+  },
   { name: 'Bevilaqua', role: 'Artista' },
-  { name: 'Franckenstein', role: 'Artista' },
+  {
+    name: 'Franckenstein',
+    role: 'Artista',
+    styles: ['Dark Ornamental', 'Free Hand'],
+    bio: [
+      'Franck é um artista movido pela curiosidade, pela experimentação e pela busca de uma linguagem própria. Seu trabalho vem se construindo principalmente dentro do dark ornamental, explorando formas orgânicas, free hand e desenhos pensados diretamente para o corpo.',
+      'Mais do que seguir padrões ou tendências, ele busca desenvolver uma identidade cada vez mais autoral - criando tattoos que carreguem sua forma de pensar, construir e enxergar a arte.'
+    ]
+  },
   { name: 'Arthur', role: 'Artista' },
   { name: 'Thaylane', role: 'Artista' }
 ];
@@ -215,6 +275,29 @@ function setupArtistPage() {
   document.title = `${artist.name} — Street Art Tattoo`;
   root.querySelectorAll('[data-artist-name]').forEach((el) => (el.textContent = artist.name));
   root.querySelectorAll('[data-artist-role]').forEach((el) => (el.textContent = `/ ${artist.role}`));
+
+  const bio = root.querySelector('[data-artist-bio]');
+  if (artist.bio) {
+    bio.replaceChildren(...artist.bio.map((text) => {
+      const p = document.createElement('p');
+      p.className = 'lead';
+      p.textContent = text;
+      return p;
+    }));
+    document.querySelector('meta[name="description"]').content = artist.bio[0];
+  }
+
+  const chips = root.querySelector('[data-artist-styles]');
+  if (artist.styles) {
+    chips.replaceChildren(...artist.styles.map((s) => {
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = s;
+      return chip;
+    }));
+  } else {
+    chips.remove();
+  }
   root.querySelectorAll('[data-whatsapp]').forEach((el) =>
     el.setAttribute('data-whatsapp', `Olá! Quero agendar com ${artist.name}.`)
   );
