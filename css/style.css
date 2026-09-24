@@ -228,11 +228,46 @@ section { border-bottom: 1px solid var(--line); }
 .artists .container { display: flex; flex-direction: column; gap: 22px; padding-top: 64px; padding-bottom: 64px; }
 .artists .head .lead { max-width: 60ch; margin-top: 4px; }
 
-.carousel { display: flex; align-items: center; gap: 20px; }
-.carousel-track { flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
-.carousel-card { height: 360px; border-radius: 2px; color: var(--text); transition: transform .2s; }
-.carousel-card:hover { transform: translateY(-4px); color: var(--text); }
-.carousel-card .ph-label { font-size: 13px; }
+.cyl-stage {
+  --face-w: 171px;
+  position: relative;
+  height: 460px;
+  perspective: 1000px;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.cyl-stage.dragging { cursor: grabbing; }
+.cyl { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.cyl-face {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--face-w);
+  height: calc(var(--face-w) * 1.45);
+  margin-left: calc(var(--face-w) / -2);
+  margin-top: calc(var(--face-w) * -0.725);
+  padding: 4px;
+  color: var(--text);
+  -webkit-user-drag: none;
+}
+.cyl-face:hover, .cyl-face:focus-visible { color: var(--text); outline: none; }
+.cyl-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  border: 1px solid rgba(236, 231, 221, 0.08);
+  transition: border-color .2s;
+}
+.cyl-face:hover .cyl-card, .cyl-face:focus-visible .cyl-card { border-color: var(--accent); }
+.cyl-card .ph-label { font-size: 11px; }
+.cyl-card .card-overlay { padding: 10px; }
+.cyl-card .card-overlay .role { font-size: 8.5px; letter-spacing: 0.1em; }
+.cyl-card .card-overlay .name { font-size: 13px; }
+.cyl-controls { display: flex; align-items: center; justify-content: center; gap: 18px; }
 .round-btn {
   flex-shrink: 0;
   width: 48px;
@@ -248,8 +283,7 @@ section { border-bottom: 1px solid var(--line); }
   justify-content: center;
 }
 .round-btn:hover { border-color: var(--accent); color: var(--accent); }
-.carousel-counter { text-align: center; font-size: 12px; font-weight: 700; color: var(--accent); }
-.carousel-controls-mobile { display: none; }
+.carousel-counter { min-width: 56px; text-align: center; font-size: 12px; font-weight: 700; color: var(--accent); }
 
 .piercing .container { display: flex; flex-direction: column; gap: 28px; }
 .piercing-row { display: flex; gap: 40px; align-items: center; }
@@ -322,8 +356,6 @@ section { border-bottom: 1px solid var(--line); }
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
   .h-xl { font-size: 96px; }
-  .carousel-track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .carousel-track .carousel-card:nth-child(4) { display: none; }
 }
 
 @media (max-width: 860px) {
@@ -368,17 +400,12 @@ section { border-bottom: 1px solid var(--line); }
 
   .manifesto .container, .artists .container { padding-top: 40px; padding-bottom: 40px; }
 
-  .carousel .round-btn { display: none; }
-  .carousel-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-  .carousel-track .carousel-card:nth-child(n+3) { display: none; }
-  .carousel-card { height: 190px; }
-  .carousel-card .ph-label { font-size: 10px; }
-  .carousel-card .card-overlay { padding: 10px; }
-  .carousel-card .card-overlay .role { font-size: 9px; }
-  .carousel-card .card-overlay .name { font-size: 13px; }
-  .carousel-controls-mobile { display: flex; align-items: center; justify-content: center; gap: 18px; }
-  .carousel-controls-mobile .round-btn { width: 44px; height: 44px; font-size: 18px; }
-  .carousel-counter.desktop { display: none; }
+  .cyl-stage { height: 300px; margin: 0 calc(var(--gutter) * -1); }
+  .cyl-card .ph-label { font-size: 9px; }
+  .cyl-card .card-overlay { padding: 7px; }
+  .cyl-card .card-overlay .role { font-size: 7px; }
+  .cyl-card .card-overlay .name { font-size: 10.5px; }
+  .cyl-controls .round-btn { width: 44px; height: 44px; font-size: 18px; }
 
   .piercing .container { gap: 18px; }
   .piercing-row { flex-direction: column; align-items: stretch; gap: 18px; }

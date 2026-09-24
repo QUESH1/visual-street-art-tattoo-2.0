@@ -68,20 +68,17 @@
     </div>
   </section>
 
-  <section class="artists" id="artistas" aria-roledescription="carrossel">
+  <section class="artists" id="artistas">
     <div class="container">
       <div class="head">
         <span class="eyebrow">/ O Coletivo</span>
         <h2 class="h-display h-sm">Artistas</h2>
-        <p class="lead">Cada artista do studio tem assinatura própria. Clique num perfil e conheça o trabalho e o estilo de cada um.</p>
+        <p class="lead">Cada artista do studio tem assinatura própria. Arraste para girar e clique num perfil para conhecer o trabalho e o estilo de cada um.</p>
       </div>
-      <div class="carousel">
-        <button class="round-btn" type="button" data-carousel="prev" aria-label="Artista anterior">‹</button>
-        <div class="carousel-track" aria-live="polite"></div>
-        <button class="round-btn" type="button" data-carousel="next" aria-label="Próximo artista">›</button>
+      <div class="cyl-stage" role="region" aria-roledescription="carrossel" aria-label="Artistas do studio">
+        <div class="cyl"></div>
       </div>
-      <div class="carousel-counter desktop"></div>
-      <div class="carousel-controls-mobile">
+      <div class="cyl-controls">
         <button class="round-btn" type="button" data-carousel="prev" aria-label="Artista anterior">‹</button>
         <span class="carousel-counter"></span>
         <button class="round-btn" type="button" data-carousel="next" aria-label="Próximo artista">›</button>
