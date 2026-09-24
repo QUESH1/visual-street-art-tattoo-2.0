@@ -80,7 +80,6 @@ const ARTISTS = [
 
 const slug = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-');
 const artistHref = (a) => a.page || `artista.html?a=${slug(a.name)}`;
-const pad = (n) => (n < 10 ? '0' + n : String(n));
 
 function setupMenu() {
   const toggle = document.querySelector('.menu-toggle');
@@ -135,20 +134,16 @@ function setupCarousel() {
   const stage = document.querySelector('.cyl-stage');
   if (!stage) return;
   const ring = stage.querySelector('.cyl');
-  const counter = document.querySelector('.carousel-counter');
   const n = ARTISTS.length;
   const step = 360 / n;
   const AUTO_SPEED = 0.006; // graus por ms (~1 volta por minuto)
   const DRAG = 0.2; // graus por px arrastado
   const small = window.matchMedia('(max-width: 640px)');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   let rotation = 0;
   let velocity = 0;
-  let target = null;
+  let pending = 0; // giro extra das setas/foco, aplicado aos poucos por cima do giro automático
   let dragging = false;
-  let hovering = false;
-  let focused = false;
   let moved = 0;
   let lastX = 0;
   let lastT = 0;
@@ -173,18 +168,13 @@ function setupCarousel() {
     faces.forEach((f, i) => (f.style.transform = `rotateY(${i * step}deg) translateZ(${radius}px)`));
   };
 
-  const snap = (deg) => Math.round(deg / step) * step;
-  const frontIndex = () => ((Math.round(-rotation / step) % n) + n) % n;
-
   function goTo(i) {
-    const base = -i * step;
-    target = base + Math.round((rotation - base) / 360) * 360;
-    velocity = 0;
+    const d = -i * step - (rotation + pending);
+    pending += d - Math.round(d / 360) * 360;
   }
 
   const nudge = (dir) => {
-    target = snap(target ?? rotation) - dir * step;
-    velocity = 0;
+    pending -= dir * step;
   };
 
   const render = () => {
@@ -193,22 +183,21 @@ function setupCarousel() {
       const facing = Math.cos(((i * step + rotation) * Math.PI) / 180);
       f.style.opacity = (0.25 + 0.75 * Math.max(0, facing)).toFixed(3);
     });
-    counter.textContent = `${pad(frontIndex() + 1)} / ${pad(n)}`;
   };
 
   const tick = (now) => {
     const dt = Math.min(now - last, 64);
     last = now;
+    rotation -= AUTO_SPEED * dt;
     if (!dragging) {
-      if (target !== null) {
-        const d = target - rotation;
-        rotation += d * Math.min(1, dt / 110);
-        if (Math.abs(d) < 0.05) { rotation = target; target = null; }
-      } else if (Math.abs(velocity) > 0.002) {
+      if (pending !== 0) {
+        const d = Math.abs(pending) < 0.05 ? pending : pending * Math.min(1, dt / 110);
+        rotation += d;
+        pending -= d;
+      }
+      if (Math.abs(velocity) > 0.002) {
         rotation += velocity * dt;
         velocity *= Math.pow(0.94, dt / 16);
-      } else if (!reduce.matches && !hovering && !focused && !document.hidden) {
-        rotation -= AUTO_SPEED * dt;
       }
     }
     render();
@@ -222,7 +211,7 @@ function setupCarousel() {
     lastX = e.clientX;
     lastT = e.timeStamp;
     velocity = 0;
-    target = null;
+    pending = 0;
   });
   stage.addEventListener('pointermove', (e) => {
     if (!dragging) return;
@@ -250,10 +239,6 @@ function setupCarousel() {
   stage.addEventListener('click', (e) => {
     if (moved > 6) { e.preventDefault(); e.stopPropagation(); }
   }, true);
-  stage.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hovering = true; });
-  stage.addEventListener('pointerleave', () => (hovering = false));
-  stage.addEventListener('focusin', () => (focused = true));
-  stage.addEventListener('focusout', () => (focused = false));
 
   document.querySelector('[data-carousel="prev"]').addEventListener('click', () => nudge(-1));
   document.querySelector('[data-carousel="next"]').addEventListener('click', () => nudge(1));

@@ -283,7 +283,6 @@ section { border-bottom: 1px solid var(--line); }
   justify-content: center;
 }
 .round-btn:hover { border-color: var(--accent); color: var(--accent); }
-.carousel-counter { min-width: 56px; text-align: center; font-size: 12px; font-weight: 700; color: var(--accent); }
 
 .piercing .container { display: flex; flex-direction: column; gap: 28px; }
 .piercing-row { display: flex; gap: 40px; align-items: center; }
