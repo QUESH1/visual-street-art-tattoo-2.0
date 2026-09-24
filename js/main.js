@@ -71,7 +71,7 @@ const ARTISTS = [
     styles: ['Dark Ornamental', 'Free Hand'],
     bio: [
       'Franck é um artista movido pela curiosidade, pela experimentação e pela busca de uma linguagem própria. Seu trabalho vem se construindo principalmente dentro do dark ornamental, explorando formas orgânicas, free hand e desenhos pensados diretamente para o corpo.',
-      'Mais do que seguir padrões ou tendências, ele busca desenvolver uma identidade cada vez mais autoral - criando tattoos que carreguem sua forma de pensar, construir e enxergar a arte.'
+      'Mais do que seguir padrões ou tendências, ele busca desenvolver uma identidade cada vez mais autoral, criando tattoos que carreguem sua forma de pensar, construir e enxergar a arte.'
     ]
   },
   { name: 'Arthur', role: 'Artista' },
@@ -154,7 +154,7 @@ function setupCarousel() {
     face.className = 'cyl-face';
     face.href = artistHref(a);
     face.draggable = false;
-    face.setAttribute('aria-label', `${a.name} — ${a.role}`);
+    face.setAttribute('aria-label', `${a.name}, ${a.role}`);
     face.append(createArtistCard(a));
     face.addEventListener('focus', () => goTo(i));
     ring.append(face);
@@ -257,9 +257,9 @@ function setupArtistPage() {
     location.replace(artist.page);
     return;
   }
-  document.title = `${artist.name} — Street Art Tattoo`;
+  document.title = `${artist.name} | Street Art Tattoo`;
   root.querySelectorAll('[data-artist-name]').forEach((el) => (el.textContent = artist.name));
-  root.querySelectorAll('[data-artist-role]').forEach((el) => (el.textContent = `/ ${artist.role}`));
+  root.querySelectorAll('[data-artist-role]').forEach((el) => (el.textContent = artist.role));
 
   const bio = root.querySelector('[data-artist-bio]');
   if (artist.bio) {
