@@ -4,7 +4,7 @@
   --surface: #232120;
   --text: #ece7dd;
   --muted: #a49d90;
-  --faint: #726b60;
+  --faint: #8a8376;
   --placeholder: #4a4642;
   --accent: #e0a93c;
   --on-accent: #171104;
@@ -12,6 +12,7 @@
   --line-strong: rgba(236, 231, 221, 0.18);
   --shadow: rgba(224, 169, 60, 0.3);
   --gutter: 56px;
+  --header-h: 90px;
   --display: 'Anton', 'Impact', sans-serif;
   --body: 'Archivo', system-ui, sans-serif;
   --marker: 'Permanent Marker', cursive;
@@ -19,7 +20,8 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+/* scroll-padding: âncoras (#studio etc.) não ficam escondidas atrás do header fixo */
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 
 body {
   margin: 0;
@@ -44,10 +46,11 @@ a:hover { color: var(--text); }
   top: 0;
   z-index: 50;
   background: rgba(14, 13, 12, 0.94);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(236, 231, 221, 0.1);
 }
-.site-header .container { height: 90px; display: flex; align-items: center; gap: 24px; }
+.site-header .container { height: var(--header-h); display: flex; align-items: center; gap: 24px; }
 
 .logo {
   background: var(--text);
@@ -203,7 +206,7 @@ section { border-bottom: 1px solid var(--line); }
 .pad { padding-top: 72px; padding-bottom: 72px; }
 
 .hero {
-  min-height: clamp(600px, calc(100svh - 90px), 820px);
+  min-height: clamp(600px, calc(100svh - var(--header-h)), 820px);
   display: flex;
   align-items: center;
   position: relative;
@@ -359,15 +362,15 @@ section { border-bottom: 1px solid var(--line); }
 }
 
 @media (max-width: 860px) {
-  :root { --gutter: 20px; }
-  .site-header .container { height: 64px; justify-content: space-between; }
+  :root { --gutter: 20px; --header-h: 64px; }
+  .site-header .container { justify-content: space-between; }
   .logo { font-size: 13px; padding: 6px 10px; }
   .menu-toggle { display: flex; }
   .site-header .btn-sm { display: none; }
   .nav {
     display: none;
     position: absolute;
-    top: 64px; left: 0; right: 0;
+    top: var(--header-h); left: 0; right: 0;
     flex-direction: column;
     gap: 0;
     background: var(--bg);
@@ -390,7 +393,7 @@ section { border-bottom: 1px solid var(--line); }
 
   .h-md, .h-sm { font-size: 34px; text-shadow: 3px 3px 0 var(--shadow); }
   .h-xs { font-size: 32px; }
-  .h-lg { font-size: 56px; }
+  .h-lg { font-size: clamp(40px, 14vw, 56px); } /* nomes longos (Franckenstein) cabem em 320px */
   .eyebrow { font-size: 11px; letter-spacing: 0.14em; }
   .lead { font-size: 14px; line-height: 1.7; }
   .marker { font-size: 18px; }

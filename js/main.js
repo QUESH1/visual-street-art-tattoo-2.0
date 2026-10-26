@@ -12,7 +12,14 @@ const ARTISTS = [
       'Respeito, liberdade e autenticidade são a base da artista que busca construir. Entre tattoo e pintura, Aninha quer ampliar sua linguagem, ganhar cada vez mais autonomia e criar trabalhos que carreguem verdade, força e identidade.'
     ]
   },
-  { name: 'Lari', role: 'Artista' },
+  {
+    name: 'Lari',
+    role: 'Artista',
+    bio: [
+      'Larissa encontrou na tatuagem sua forma de expressão artística, depois de uma infância marcada pelo contato com desenhos, pinturas e a arte de rua. Foi através do artesanato e da liberdade criativa que começou a construir sua identidade como artista.',
+      'Seu trabalho é guiado pela autenticidade, liberdade e expressão individual. Mais do que marcar a pele, Larissa busca criar tatuagens que carreguem sua identidade artística e se conectem verdadeiramente com quem escolhe sua arte.'
+    ]
+  },
   {
     name: 'Savoi',
     role: 'Artista',
@@ -46,7 +53,14 @@ const ARTISTS = [
       'Honestidade, sinceridade e respeito guiam sua forma de trabalhar. Como artista, busca construir uma identidade própria e criar tattoos que reforcem uma ideia importante para ele: cada pessoa é única e capaz de transformar a própria realidade.'
     ]
   },
-  { name: 'Yoki', role: 'Artista' },
+  {
+    name: 'Yoki',
+    role: 'Artista',
+    bio: [
+      'Paula encontrou na arte e na tattoo um espaço para se expressar com liberdade e transformar experiências em identidade. Sensível às diferentes formas de expressão, seu trabalho nasce da conexão com sentimentos, referências e histórias que muitas vezes não cabem em padrões.',
+      'Empatia, respeito e acolhimento são parte essencial da sua forma de trabalhar. Paula busca criar tattoos que ajudem cada pessoa a assumir quem é, carregar seus gostos sem medo de julgamentos e encontrar na própria pele uma forma de expressão e pertencimento.'
+    ]
+  },
   {
     name: 'Lincoln',
     role: 'Artista',
@@ -64,7 +78,14 @@ const ARTISTS = [
       'Mangás, animes e outras referências dessa cultura aparecem no seu trabalho como formas de unir identidade, sentimento e narrativa. Mais do que tatuar, Pedro busca crescer dentro da arte e construir um trabalho que também possa inspirar outros artistas no caminho.'
     ]
   },
-  { name: 'Bevilaqua', role: 'Artista' },
+  {
+    name: 'Bevilaqua',
+    role: 'Artista',
+    bio: [
+      'Igor encontrou na tattoo uma forma de construir o próprio caminho, longe de modelos de vida que nunca fizeram sentido para ele. Liberdade, serenidade e respeito pela história de cada pessoa fazem parte da forma como enxerga a vida e também a arte.',
+      'Seu trabalho busca incentivar expressão e individualidade através da tattoo. Igor quer crescer como artista, conhecer novos lugares através do que faz e inspirar outras pessoas a seguirem seus próprios caminhos, mesmo quando eles fogem do que é considerado normal.'
+    ]
+  },
   {
     name: 'Franckenstein',
     role: 'Artista',
@@ -74,11 +95,19 @@ const ARTISTS = [
       'Mais do que seguir padrões ou tendências, ele busca desenvolver uma identidade cada vez mais autoral, criando tattoos que carreguem sua forma de pensar, construir e enxergar a arte.'
     ]
   },
-  { name: 'Arthur', role: 'Artista' },
+  {
+    name: 'Arthur',
+    role: 'Artista',
+    styles: ['Custom Lettering', 'Lowrider', 'Hip-Hop'],
+    bio: [
+      'Arthur Bigode é um artista movido por curiosidade, estudo e vontade de fazer bem feito. O desenho acompanha sua história desde cedo, e na tattoo ele encontrou um caminho para unir referências que sempre fizeram parte do seu repertório, especialmente Custom Lettering, cultura Lowrider e Hip-Hop dos anos 2000.',
+      'Seu trabalho busca transformar essas influências em uma linguagem própria, com respeito à origem de cada referência e atenção a quem carrega a tattoo. Arthur quer construir um trabalho autoral, reconhecível não só pela estética, mas pela forma de pensar e desenhar.'
+    ]
+  },
   { name: 'Thaylane', role: 'Artista' }
 ];
 
-const slug = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-');
+const slug = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
 const artistHref = (a) => a.page || `artista.html?a=${slug(a.name)}`;
 
 function setupMenu() {
@@ -139,8 +168,8 @@ function setupCarousel() {
   const AUTO_SPEED = 0.006; // graus por ms (~1 volta por minuto)
   const DRAG = 0.2; // graus por px arrastado
   const small = window.matchMedia('(max-width: 640px)');
-
   let rotation = 0;
+  let frame = 0;
   let velocity = 0;
   let pending = 0; // giro extra das setas/foco, aplicado aos poucos por cima do giro automático
   let dragging = false;
@@ -201,7 +230,18 @@ function setupCarousel() {
       }
     }
     render();
-    requestAnimationFrame(tick);
+    frame = requestAnimationFrame(tick);
+  };
+
+  // só anima com o carrossel na tela
+  const start = () => {
+    if (frame) return;
+    last = performance.now();
+    frame = requestAnimationFrame(tick);
+  };
+  const stop = () => {
+    cancelAnimationFrame(frame);
+    frame = 0;
   };
 
   stage.addEventListener('pointerdown', (e) => {
@@ -245,7 +285,8 @@ function setupCarousel() {
   small.addEventListener('change', layout);
 
   layout();
-  requestAnimationFrame(tick);
+  render();
+  new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop())).observe(stage);
 }
 
 function setupArtistPage() {
