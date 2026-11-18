@@ -1,5 +1,5 @@
 // Número no formato internacional, só dígitos (ex.: '5531999999999'). Vazio = botões levam ao rodapé.
-const WHATSAPP_NUMBER = '';
+const WHATSAPP_NUMBER = '5531982376982';
 
 // bio: textos oficiais da pasta manifesto (um item por parágrafo). styles: só o que a biografia cita.
 const ARTISTS = [
@@ -103,8 +103,7 @@ const ARTISTS = [
       'Arthur Bigode é um artista movido por curiosidade, estudo e vontade de fazer bem feito. O desenho acompanha sua história desde cedo, e na tattoo ele encontrou um caminho para unir referências que sempre fizeram parte do seu repertório, especialmente Custom Lettering, cultura Lowrider e Hip-Hop dos anos 2000.',
       'Seu trabalho busca transformar essas influências em uma linguagem própria, com respeito à origem de cada referência e atenção a quem carrega a tattoo. Arthur quer construir um trabalho autoral, reconhecível não só pela estética, mas pela forma de pensar e desenhar.'
     ]
-  },
-  { name: 'Thaylane', role: 'Artista' }
+  }
 ];
 
 const slug = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
@@ -329,7 +328,17 @@ function setupArtistPage() {
   );
 }
 
+// quem prefere menos movimento vê só a foto de capa dos vídeos
+function setupEventVideos() {
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.event video').forEach((v) => {
+    v.removeAttribute('autoplay');
+    v.pause();
+  });
+}
+
 setupMenu();
+setupEventVideos();
 setupArtistPage();
 setupWhatsApp();
 setupCarousel();
